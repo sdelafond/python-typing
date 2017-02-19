@@ -3,4 +3,4 @@
 export PYBUILD_NAME=typing
 
 %:
-	dh $@ --with python2,python3
+	dh $@ --with python2
