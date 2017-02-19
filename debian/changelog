@@ -1,3 +1,9 @@
+python-typing (3.5.2.2-2) unstable; urgency=medium
+
+  * Do not use python3 dh addon
+
+ -- Sebastien Delafond <seb@debian.org>  Sun, 19 Feb 2017 12:23:04 +0100
+
 python-typing (3.5.2.2-1) unstable; urgency=low
 
   * New package (Closes: #839121)
