@@ -1,13 +1,14 @@
 from __future__ import absolute_import, unicode_literals
 
 import collections
+import contextlib
 import pickle
 import re
 import sys
 from unittest import TestCase, main, SkipTest
 from copy import copy, deepcopy
 
-from typing import Any
+from typing import Any, NoReturn
 from typing import TypeVar, AnyStr
 from typing import T, KT, VT  # Not in __all__.
 from typing import Union, Optional
@@ -104,6 +105,40 @@ class AnyTests(BaseTestCase):
         typing.Match[Any]
         typing.Pattern[Any]
         typing.IO[Any]
+
+
+class NoReturnTests(BaseTestCase):
+
+    def test_noreturn_instance_type_error(self):
+        with self.assertRaises(TypeError):
+            isinstance(42, NoReturn)
+
+    def test_noreturn_subclass_type_error(self):
+        with self.assertRaises(TypeError):
+            issubclass(Employee, NoReturn)
+        with self.assertRaises(TypeError):
+            issubclass(NoReturn, Employee)
+
+    def test_repr(self):
+        self.assertEqual(repr(NoReturn), 'typing.NoReturn')
+
+    def test_not_generic(self):
+        with self.assertRaises(TypeError):
+            NoReturn[int]
+
+    def test_cannot_subclass(self):
+        with self.assertRaises(TypeError):
+            class A(NoReturn):
+                pass
+        with self.assertRaises(TypeError):
+            class A(type(NoReturn)):
+                pass
+
+    def test_cannot_instantiate(self):
+        with self.assertRaises(TypeError):
+            NoReturn()
+        with self.assertRaises(TypeError):
+            type(NoReturn)()
 
 
 class TypeVarTests(BaseTestCase):
@@ -1543,11 +1578,11 @@ class CollectionsAbcTests(BaseTestCase):
         self.assertIsSubclass(MMC, typing.Mapping)
 
         self.assertIsInstance(MMB[KT, VT](), typing.Mapping)
-        self.assertIsInstance(MMB[KT, VT](), collections.Mapping)
+        self.assertIsInstance(MMB[KT, VT](), collections_abc.Mapping)
 
-        self.assertIsSubclass(MMA, collections.Mapping)
-        self.assertIsSubclass(MMB, collections.Mapping)
-        self.assertIsSubclass(MMC, collections.Mapping)
+        self.assertIsSubclass(MMA, collections_abc.Mapping)
+        self.assertIsSubclass(MMB, collections_abc.Mapping)
+        self.assertIsSubclass(MMC, collections_abc.Mapping)
 
         self.assertIsSubclass(MMB[str, str], typing.Mapping)
         self.assertIsSubclass(MMC, MMA)
@@ -1559,9 +1594,9 @@ class CollectionsAbcTests(BaseTestCase):
         def g(): yield 0
         self.assertIsSubclass(G, typing.Generator)
         self.assertIsSubclass(G, typing.Iterable)
-        if hasattr(collections, 'Generator'):
-            self.assertIsSubclass(G, collections.Generator)
-        self.assertIsSubclass(G, collections.Iterable)
+        if hasattr(collections_abc, 'Generator'):
+            self.assertIsSubclass(G, collections_abc.Generator)
+        self.assertIsSubclass(G, collections_abc.Iterable)
         self.assertNotIsSubclass(type(g), G)
 
     def test_subclassing_subclasshook(self):
@@ -1597,26 +1632,38 @@ class CollectionsAbcTests(BaseTestCase):
         self.assertIsSubclass(D, B)
 
         class M(): pass
-        collections.MutableMapping.register(M)
+        collections_abc.MutableMapping.register(M)
         self.assertIsSubclass(M, typing.Mapping)
 
     def test_collections_as_base(self):
 
-        class M(collections.Mapping): pass
+        class M(collections_abc.Mapping): pass
         self.assertIsSubclass(M, typing.Mapping)
         self.assertIsSubclass(M, typing.Iterable)
 
-        class S(collections.MutableSequence): pass
+        class S(collections_abc.MutableSequence): pass
         self.assertIsSubclass(S, typing.MutableSequence)
         self.assertIsSubclass(S, typing.Iterable)
 
-        class I(collections.Iterable): pass
+        class I(collections_abc.Iterable): pass
         self.assertIsSubclass(I, typing.Iterable)
 
-        class A(collections.Mapping): pass
+        class A(collections_abc.Mapping): pass
         class B: pass
         A.register(B)
         self.assertIsSubclass(B, typing.Mapping)
+
+
+class OtherABCTests(BaseTestCase):
+
+    def test_contextmanager(self):
+        @contextlib.contextmanager
+        def manager():
+            yield 42
+
+        cm = manager()
+        self.assertIsInstance(cm, typing.ContextManager)
+        self.assertNotIsInstance(42, typing.ContextManager)
 
 
 class TypeTests(BaseTestCase):
@@ -1804,6 +1851,8 @@ class AllTests(BaseTestCase):
         self.assertNotIn('sys', a)
         # Check that Text is defined.
         self.assertIn('Text', a)
+        # Check previously missing class.
+        self.assertIn('SupportsComplex', a)
 
     def test_respect_no_type_check(self):
         @typing.no_type_check
