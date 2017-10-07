@@ -1,3 +1,9 @@
+python-typing (3.6.2-1) unstable; urgency=medium
+
+  * New upstream version 3.6.2
+
+ -- Sebastien Delafond <seb@debian.org>  Sat, 07 Oct 2017 10:40:08 +0200
+
 python-typing (3.6.1-1) unstable; urgency=medium
 
   * Imported Upstream version 3.6.1
