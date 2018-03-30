@@ -1,3 +1,14 @@
+python-typing (3.6.4-1) unstable; urgency=medium
+
+  * Switch to DEP 14
+  * Update Vcs-* to point to salsa.d.o
+  * New upstream version 3.6.4
+  * Bump-up Standards-Version
+  * Use https for watch URL
+  * Use https for copyright-format URL
+
+ -- Sebastien Delafond <seb@debian.org>  Fri, 30 Mar 2018 14:05:45 +0200
+
 python-typing (3.6.2-1) unstable; urgency=medium
 
   * New upstream version 3.6.2
