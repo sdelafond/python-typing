@@ -73,6 +73,7 @@ __all__ = [
     'NewType',
     'no_type_check',
     'no_type_check_decorator',
+    'NoReturn',
     'overload',
     'Text',
     'TYPE_CHECKING',
@@ -1287,10 +1288,18 @@ def _generic_new(base_cls, cls, *args, **kwds):
     # Assure type is erased on instantiation,
     # but attempt to store it in __orig_class__
     if cls.__origin__ is None:
-        return base_cls.__new__(cls)
+        if (base_cls.__new__ is object.__new__ and
+                cls.__init__ is not object.__init__):
+            return base_cls.__new__(cls)
+        else:
+            return base_cls.__new__(cls, *args, **kwds)
     else:
         origin = cls._gorg
-        obj = base_cls.__new__(origin)
+        if (base_cls.__new__ is object.__new__ and
+                cls.__init__ is not object.__init__):
+            obj = base_cls.__new__(origin)
+        else:
+            obj = base_cls.__new__(origin, *args, **kwds)
         try:
             obj.__orig_class__ = cls
         except AttributeError:
@@ -2052,7 +2061,7 @@ class IO(Generic[AnyStr]):
     def close(self):
         pass
 
-    @abstractmethod
+    @abstractproperty
     def closed(self):
         pass
 

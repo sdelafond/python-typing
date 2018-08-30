@@ -1,12 +1,11 @@
 Metadata-Version: 1.1
 Name: typing
-Version: 3.6.4
+Version: 3.6.6
 Summary: Type Hints for Python
 Home-page: https://docs.python.org/3/library/typing.html
 Author: Guido van Rossum, Jukka Lehtosalo, Łukasz Langa, Ivan Levkivskyi
 Author-email: jukka.lehtosalo@iki.fi
 License: PSF
-Description-Content-Type: UNKNOWN
 Description: Typing -- Type Hints for Python
         
         This is a backport of the standard library typing module to Python
