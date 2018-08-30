@@ -1,6 +1,7 @@
 LICENSE
 MANIFEST.in
 README.rst
+setup.cfg
 setup.py
 python2/mod_generics_cache.py
 python2/test_typing.py
