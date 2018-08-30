@@ -1,3 +1,9 @@
+python-typing (3.6.6-1) unstable; urgency=medium
+
+  * New upstream version 3.6.6
+
+ -- Sebastien Delafond <seb@debian.org>  Thu, 30 Aug 2018 07:38:04 +0200
+
 python-typing (3.6.4-1) unstable; urgency=medium
 
   * Switch to DEP 14
