@@ -1,3 +1,11 @@
+python-typing (3.6.6-2) unstable; urgency=medium
+
+  [ Sébastien Delafond ]
+  * Update changelog for 3.6.6-1 release
+  * Set maintainer to Debian QA Group
+
+ -- Sebastien Delafond <seb@debian.org>  Thu, 19 Dec 2019 15:29:38 +0100
+
 python-typing (3.6.6-1) unstable; urgency=medium
 
   * New upstream version 3.6.6
